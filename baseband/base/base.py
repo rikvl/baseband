@@ -404,17 +404,12 @@ class StreamBase:
     _frame_index = None
 
     def __init__(self, fh_raw, header0, *,
-                 squeeze=True, subset=(), fill_value=0., verify=True,
-                 **kwargs):
+                 squeeze=True, verify=True, **kwargs):
         # Required arguments.
         self.fh_raw = fh_raw
         self._header0 = header0
         # Arguments with defaults.
         self._squeeze = bool(squeeze)
-        self._subset = (() if subset is None
-                        else subset if isinstance(subset, tuple)
-                        else (subset,))
-        self._fill_value = float(fill_value)
         self.verify = verify
         # Arguments that can override or complement information from header.
         for header_attr, getter in [
@@ -648,10 +643,11 @@ class StreamReaderBase(StreamBase):
     def __init__(self, fh_raw, header0, *,
                  squeeze=True, subset=(), fill_value=0., verify=True,
                  **kwargs):
-
-        super().__init__(fh_raw, header0,
-                         squeeze=squeeze, subset=subset,
-                         fill_value=fill_value, verify=verify,
+        self._subset = (() if subset is None
+                        else subset if isinstance(subset, tuple)
+                        else (subset,))
+        self._fill_value = float(fill_value)
+        super().__init__(fh_raw, header0, squeeze=squeeze, verify=verify,
                          **kwargs)
 
         if hasattr(header0, 'frame_nbytes'):
