@@ -1541,3 +1541,10 @@ class TestFindHeader:
             header = fc.find_header()
             assert header is not None
             assert header == h1
+
+def test_edf3_vdif_payload_size():
+    """Test payload size in VDIF EDF3."""
+    with open(SAMPLE_FILE, 'rb') as fh:
+        header = vdif.VDIFHeader.fromfile(fh)
+        assert header.payload_nbytes == 1000 or header.payload_nbytes == 5000
+    

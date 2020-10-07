@@ -734,15 +734,7 @@ class VDIFHeader3(VDIFSampleRateHeader):
 
     def verify(self):
         super().verify()
-        assert self['frame_length'] == 629
-
-    @fixedvalue
-    def payload_nbytes(cls):
-        return 5000
-
-    @fixedvalue
-    def frame_nbytes(cls):
-        return cls.nbytes + cls.payload_nbytes
+        assert self['frame_length'] == 129 or self['frame_length'] == 629
 
 
 class VDIFHeader2(VDIFBaseHeader, VDIFNoSampleRateHeader):
