@@ -734,7 +734,18 @@ class VDIFHeader3(VDIFSampleRateHeader):
 
     def verify(self):
         super().verify()
-        assert self['frame_length'] == 129 or self['frame_length'] == 629
+        assert self['frame_length'] in (129, 629)
+
+    @frame_nbytes.setter
+    def frame_nbytes(self, nbytes):
+        assert nbytes % 8 == 0
+        assert nbytes in (1032, 5032)
+        self['frame_length'] = int(nbytes) // 8
+
+    @payload_nbytes.setter
+    def payload_nbytes(self, nbytes):
+        assert nbytes in (1000, 5000)
+        self.frame_nbytes = nbytes + self.nbytes
 
 
 class VDIFHeader2(VDIFBaseHeader, VDIFNoSampleRateHeader):
